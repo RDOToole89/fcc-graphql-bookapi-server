@@ -3,6 +3,13 @@ const { argsToArgsConfig } = require('graphql/type/definition');
 
 const { GraphQLObectType, GraphQLString, GraphQLSchema } = graphql;
 
+// dummy data
+let books = [
+  { name: 'Name of the Wind', genre: 'Fantasy', id: '1' },
+  { name: 'The Final Empire', genre: 'Fantasy', id: '2' },
+  { name: 'The Long Earth', genre: 'Sci-Fi', id: '3' },
+];
+
 // Schema Type that defines data object type which defines "Book"
 const BookType = new GraphQLObectType({
   name: 'Book',
@@ -24,8 +31,9 @@ const RootQuery = new GraphQLObectType({
       // in this case an id which is a string.
       // this data will fire the resolve function which will deliver our data
       args: { id: { type: GraphQLString } },
-      // code to get data from db / other source
-      resolve(parent, args) {},
+      resolve(parent, args) {
+        // code to get data from db / other source
+      },
     },
   },
 });
