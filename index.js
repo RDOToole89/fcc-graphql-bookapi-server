@@ -13,7 +13,10 @@ app.use(cors());
 app.use(
   '/graphql',
   graphqlHTTP({
+    // adds initial schema
     schema,
+    // adds graphiql tool to interact with graph
+    graphiql: true,
   })
 );
 
