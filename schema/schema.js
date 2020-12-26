@@ -1,6 +1,9 @@
 const graphql = require('graphql');
 const _ = require('lodash');
 
+//https://www.youtube.com/watch?v=ed8SzALpx1Q
+// Left off at 1:09:33 / 4:05:05
+
 const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLID, GraphQLInt } = graphql;
 
 // dummy data
@@ -30,7 +33,7 @@ const BookType = new GraphQLObjectType({
 
 const AuthorType = new GraphQLObjectType({
   name: 'Author',
-  field: () => ({
+  fields: () => ({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     age: { type: GraphQLInt },
@@ -52,6 +55,13 @@ const RootQuery = new GraphQLObjectType({
         // code to get data from db / other source
         // lodash function defines what will be returned from the frontend request
         return _.find(books, { id: args.id });
+      },
+    },
+    author: {
+      type: AuthorType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return _.find(authors, { id: args.id });
       },
     },
   },
