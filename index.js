@@ -1,5 +1,6 @@
 const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
+const schema = require('./schema/schema');
 const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -9,7 +10,12 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 
-app.use('/graphql', graphqlHTTP({}));
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema,
+  })
+);
 
 app.get('/', (req, res, next) => {
   res.json('Hello World');
