@@ -36,6 +36,7 @@ const BookType = new GraphQLObjectType({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     genre: { type: GraphQLString },
+    // defines relation with author type many => 1
     author: {
       type: AuthorType,
       resolve(parent, args) {
@@ -54,6 +55,7 @@ const AuthorType = new GraphQLObjectType({
     name: { type: GraphQLString },
     age: { type: GraphQLInt },
     books: {
+      //  defines relation with book type 1 => many therefore we use GraphQLList
       type: new GraphQLList(BookType),
       resolve(parent, args) {
         console.log(parent);
@@ -85,6 +87,19 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
         return _.find(authors, { id: args.id });
+      },
+    },
+    // RootQuery to get a list of ALL books
+    books: {
+      type: new GraphQLList(BookType),
+      resolve(parent, args) {
+        return books;
+      },
+    },
+    authors: {
+      type: new GraphQLList(AuthorType),
+      resolve(parent, args) {
+        return authors;
       },
     },
   },
