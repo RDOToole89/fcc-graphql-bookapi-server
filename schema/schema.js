@@ -10,7 +10,10 @@ const {
   GraphQLSchema,
   GraphQLID,
   GraphQLInt,
+  // GraphQL List
   GraphQLList,
+  // GraphQL propery to not allow Null values
+  GraphQLNonNull,
 } = graphql;
 
 // Schema Type that defines data object type which defines "Book"
@@ -108,8 +111,9 @@ const Mutation = new GraphQLObjectType({
     addAuthor: {
       type: AuthorType,
       args: {
-        name: { type: GraphQLString },
-        age: { type: GraphQLInt },
+        // new GraphQLNonNull prevents mutations taking place that if a property has a null value
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        age: { type: new GraphQLNonNull(GraphQLInt) },
       },
       resolve(parent, args) {
         // mongoose model which is imported which creates a new instance of that datatype
@@ -127,9 +131,9 @@ const Mutation = new GraphQLObjectType({
     addBook: {
       type: BookType,
       args: {
-        name: { type: GraphQLString },
-        genre: { type: GraphQLString },
-        authorId: { type: GraphQLID },
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        genre: { type: new GraphQLNonNull(GraphQLString) },
+        authorId: { type: new GraphQLNonNull(GraphQLID) },
       },
       resolve(parent, args) {
         // we create a new book with the Book model we imported
@@ -159,5 +163,22 @@ module.exports = new GraphQLSchema({
 //   addAuthor(name:"Roibin", age: 31) {
 //     name
 //     age
+//   }
+// }
+
+// EXAMPLE ROOTQUERY ON THE FRONTEND
+
+// find book with specific id, include name, genre and nest author with name and his other books
+// {
+//   book(id: "5fe8986bf1026a4266d5902a") {
+//     name
+//     genre
+//     author{
+//       name
+//       books {
+//         name
+//       }
+
+//     }
 //   }
 // }
