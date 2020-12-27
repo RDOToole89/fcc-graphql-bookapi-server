@@ -116,6 +116,23 @@ const Mutation = new GraphQLObjectType({
         return author.save();
       },
     },
+    addBook: {
+      type: BookType,
+      args: {
+        name: { type: GraphQLString },
+        genre: { type: GraphQLString },
+        authorId: { type: GraphQLID },
+      },
+      resolve(parent, args) {
+        // we create a new book with the Book model we imported
+        let book = new Book({
+          name: args.name,
+          genre: args.genre,
+          authorId: args.authorId,
+        });
+        return book.save();
+      },
+    },
   },
 });
 
@@ -127,3 +144,12 @@ module.exports = new GraphQLSchema({
   // mutation tells GraphQL is can use our Mutation schema to create data
   mutation: Mutation,
 });
+
+//EXAMPLE MUTATION QUERY ON THE FRONTEND
+
+// mutation {
+//   addAuthor(name:"Roibin", age: 31) {
+//     name
+//     age
+//   }
+// }
