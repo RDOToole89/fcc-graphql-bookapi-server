@@ -30,6 +30,7 @@ const BookType = new GraphQLObjectType({
         // parent object holds the Book object
         console.log(parent);
         // return _.find(authors, { id: parent.authorId });
+        return Author.findById(parent.authorId);
       },
     },
   }),
@@ -47,6 +48,8 @@ const AuthorType = new GraphQLObjectType({
       resolve(parent, args) {
         console.log(parent);
         // return _.filter(books, { authorId: parent.id });
+        // .find is a mongoose method to return all entries with a given criteria
+        return Book.find({ authorId: parent.id });
       },
     },
   }),
@@ -67,6 +70,7 @@ const RootQuery = new GraphQLObjectType({
         // code to get data from db / other source
         // lodash function defines what will be returned from the frontend request
         // return _.find(books, { id: args.id });
+        return Book.findById(args.id);
       },
     },
     author: {
@@ -74,6 +78,7 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
         // return _.find(authors, { id: args.id });
+        return Author.findById(args.id);
       },
     },
     // RootQuery to get a list of ALL books
@@ -81,12 +86,15 @@ const RootQuery = new GraphQLObjectType({
       type: new GraphQLList(BookType),
       resolve(parent, args) {
         // return books;
+        // here we want to return all Books so Book.find({}) return ALL books
+        return Book.find({});
       },
     },
     authors: {
       type: new GraphQLList(AuthorType),
       resolve(parent, args) {
         // return authors;
+        return Author.find({});
       },
     },
   },
