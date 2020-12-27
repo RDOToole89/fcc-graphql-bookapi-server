@@ -6,7 +6,7 @@ const app = express();
 const mongoose = require('mongoose');
 const PORT = process.env.PORT || 4000;
 
-// Mongoose setup
+// Mongoose setup - creates an instance of MongoDB
 mongoose.connect(
   'mongodb+srv://roibinotoole:test@gql-free.g52o7.mongodb.net/GQL-BOOK-API?retryWrites=true&w=majority',
   { useNewUrlParser: true, useUnifiedTopology: true }
@@ -21,7 +21,7 @@ app.use(cors());
 app.use(
   '/graphql',
   graphqlHTTP({
-    // adds initial schema
+    // adds initial schema / defines the Graph
     schema,
     // adds graphiql tool to interact with graph
     graphiql: true,
