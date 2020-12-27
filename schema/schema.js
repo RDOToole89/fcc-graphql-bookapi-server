@@ -1,5 +1,8 @@
 const graphql = require('graphql');
 const _ = require('lodash');
+// Imports MongoDB models to interact with the Database
+const Book = require('../models/book');
+const Author = require('../models/author');
 
 const {
   GraphQLObjectType,
@@ -26,7 +29,7 @@ const BookType = new GraphQLObjectType({
       resolve(parent, args) {
         // parent object holds the Book object
         console.log(parent);
-        return _.find(authors, { id: parent.authorId });
+        // return _.find(authors, { id: parent.authorId });
       },
     },
   }),
@@ -43,7 +46,7 @@ const AuthorType = new GraphQLObjectType({
       type: new GraphQLList(BookType),
       resolve(parent, args) {
         console.log(parent);
-        return _.filter(books, { authorId: parent.id });
+        // return _.filter(books, { authorId: parent.id });
       },
     },
   }),
@@ -63,27 +66,52 @@ const RootQuery = new GraphQLObjectType({
       resolve(parent, args) {
         // code to get data from db / other source
         // lodash function defines what will be returned from the frontend request
-        return _.find(books, { id: args.id });
+        // return _.find(books, { id: args.id });
       },
     },
     author: {
       type: AuthorType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        return _.find(authors, { id: args.id });
+        // return _.find(authors, { id: args.id });
       },
     },
     // RootQuery to get a list of ALL books
     books: {
       type: new GraphQLList(BookType),
       resolve(parent, args) {
-        return books;
+        // return books;
       },
     },
     authors: {
       type: new GraphQLList(AuthorType),
       resolve(parent, args) {
-        return authors;
+        // return authors;
+      },
+    },
+  },
+});
+
+// Mutations allow for creating new data on a Graph
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addAuthor: {
+      type: AuthorType,
+      args: {
+        name: { type: GraphQLString },
+        age: { type: GraphQLInt },
+      },
+      resolve(parent, args) {
+        // mongoose model which is imported which creates a new instance of that datatype
+        // create a new author where the args are user input
+        console.log(args);
+        let author = new Author({
+          name: args.name,
+          age: args.age,
+        });
+        // .save() is a mongoose functions which allows you to simply save a new author to the db
+        author.save();
       },
     },
   },
@@ -92,15 +120,8 @@ const RootQuery = new GraphQLObjectType({
 // We define a new GraphQL Schema and passing in options defining which query the user
 // can use to retreive data from the frontend
 module.exports = new GraphQLSchema({
+  // qeury tells GraphQL it can use our RootQuery schema to query data
   query: RootQuery,
+  // mutation tells GraphQL is can use our Mutation schema to create data
+  mutation: Mutation,
 });
-
-// EXAMPLE FRONTEND QUERY
-// {
-
-//   book(id: "1") {
-//     id
-//     name
-//     genre
-//   }
-// }
