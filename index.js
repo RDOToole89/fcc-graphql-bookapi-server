@@ -3,7 +3,15 @@ const { graphqlHTTP } = require('express-graphql');
 const schema = require('./schema/schema');
 const cors = require('cors');
 const app = express();
+const mongoose = require('mongoose');
 const PORT = process.env.PORT || 4000;
+
+// Mongoose setup
+mongoose.connect(
+  'mongodb+srv://roibinotoole:test@gql-free.g52o7.mongodb.net/GQL-BOOK-API?retryWrites=true&w=majority',
+  { useNewUrlParser: true, useUnifiedTopology: true }
+);
+mongoose.connection.once('open', () => console.log('connected to database'));
 
 // MiddleWares
 app.use(express.json({ limit: '50mb' }));
