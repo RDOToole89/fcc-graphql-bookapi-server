@@ -96,6 +96,7 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
+    // addAuthor is the name we use on the frontend to create a new author
     addAuthor: {
       type: AuthorType,
       args: {
@@ -111,7 +112,8 @@ const Mutation = new GraphQLObjectType({
           age: args.age,
         });
         // .save() is a mongoose functions which allows you to simply save a new author to the db
-        author.save();
+        // return author.save() to receive back newly added data
+        return author.save();
       },
     },
   },
